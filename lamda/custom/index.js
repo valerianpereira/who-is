@@ -21,7 +21,7 @@ const https = require("https");
 //Make sure to enclose your value in quotes, like this: const APP_ID = 'amzn1.ask.skill.bb4045e6-b3e8-4133-b650-72923c5980f1';
 const APP_ID = undefined;
 
-const SKILL_NAME = 'Kid Tutor';
+const SKILL_NAME = 'Who Is';
 const HELP_MESSAGE = 'You can say tell me our pledge, or, you can say stop... What can I help you with?';
 const HELP_REPROMPT = 'What can I help you with?';
 const STOP_MESSAGE = 'Goodbye!';
