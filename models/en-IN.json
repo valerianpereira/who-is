@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "whois",
+            "invocationName": "who is",
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
@@ -20,13 +20,22 @@
                     "samples": []
                 },
                 {
-                    "name": "GetNewFactIntent",
-                    "slots": [],
+                    "name": "GetWhoIsInfo",
+                    "slots": [
+                        {
+                            "name": "domainName",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
                     "samples": [
-                        "a fact",
-                        "a space fact",
-                        "tell me a fact",
-                        "tell me a space fact"
+                        "tell me who is the owner of {domainName}",
+                        "tell me who owns {domainName}",
+                        "give me some details about {domainName}",
+                        "{domainName} belongs to",
+                        "who is the owner of {domainName}",
+                        "who owns {domainName}",
+                        "whois info for {domainName}",
+                        "give me the information for the domain {domainName}"
                     ]
                 }
             ],
