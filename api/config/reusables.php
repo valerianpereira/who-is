@@ -10,6 +10,16 @@ function validateRequest($variables = array(), $requiredFields = array()) {
   // Validating Required Variables
   if(!empty($requiredFields) && !empty($variables)) : 
     foreach($requiredFields as $f) :
+
+      if(strpos($f,'|')) { // Validation Exist
+        $tempArr = explode('|', $f);
+        if(!empty($tempArr) && count($tempArr) > 1) {
+          $f = !empty($tempArr[0]) ? $tempArr[0] : end($tempArr);
+
+          
+        }
+      }
+
       if(isset($variables[$f]) && !empty($variables[$f])) {
         if($f == 'Authorization') { // Validating Authorization
           $tempArr = explode(' ', $variables[$f]);
@@ -48,15 +58,21 @@ function validateRequest($variables = array(), $requiredFields = array()) {
 }
 
 // Kal function
-function fnCurl($url, $params, $method = "POST", $optionalParams = array()) {
+function curlIt($url, $params, $method = "POST", $optionalParams = array()) {
 
   $ch = curl_init();
   
-  curl_setopt($ch, CURLOPT_URL, $url);
+  if(strtoupper($method) == "GET") {
+    $url.= (substr($url, -1) != '/') ? '/' : ''; // Putting a Slash if Missing
+    curl_setopt($ch, CURLOPT_URL, $url.'?'.http_build_query($params));
+  } else {
+    curl_setopt($ch, CURLOPT_URL, $url);
+  }
+
   curl_setopt($ch, CURLOPT_HEADER, false);
 
-  if(!empty($optionalParams['authorization'])) {
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("authorization:". $optionalParams['authorization']));
+  if(!empty($optionalParams['Authorization'])) {
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization:". $optionalParams['Authorization']));
   }
 
   if(!empty($optionalParams['userPwd'])) {
@@ -77,8 +93,8 @@ function fnCurl($url, $params, $method = "POST", $optionalParams = array()) {
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-  $response = curl_exec($curl);
-  $err = curl_error($curl);
+  $response = curl_exec($ch);
+  $err = curl_error($ch);
 
   curl_close($ch);
 
