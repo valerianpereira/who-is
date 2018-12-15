@@ -6,14 +6,14 @@ require_once(realpath(dirname(__FILE__).'/../config/reusables.php'));
 // JSONWHOIS API
 // Refer : https://jsonwhoisapi.com/docs#auth
 $requiredFields = array(
-  'identifier',
+  'domain',
   'Authorization'
 );
 
 validateRequest(array_merge(apache_request_headers(), $_POST), $requiredFields);
 
 $reqParams = array(
-  'identifier' => trim($_POST['identifier']),
+  'identifier' => trim($_POST['domain']),
 );
 
 $optionalParams = array(
