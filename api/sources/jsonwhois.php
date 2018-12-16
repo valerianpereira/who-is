@@ -14,17 +14,20 @@ $requiredFields = array(
 
 validateRequest(array_merge(apache_request_headers(), $_POST), $requiredFields);
 
-if($_POST['r'] == 'ip') {
-  $reqParams['ip_address'] = trim($_POST['ip_address']);
-} else {
-  $reqParams['domain'] = trim($_POST['domain']);
-}
 $reqParams = array(
   'key' => JSONWHOIS_API_KEY
 );
 
+if($_POST['r'] == 'ip') {
+  $reqParams['ip_address'] = trim($_POST['ip_address']);
+  $API_URL = JSONWHOIS_API_IP_URL;
+} else {
+  $reqParams['domain'] = trim($_POST['domain']);
+  $API_URL = ($_POST['r'] == 'availability') ? JSONWHOIS_API_AVAIL_URL : JSONWHOIS_API_WHOIS_URL;
+}
+
 $respArr = array();
-$respArr = json_decode(curlIt(JSONWHOIS_API_URL, $reqParams, 'GET'));
+$respArr = json_decode(curlIt($API_URL, $reqParams, 'GET'));
 
 echoResponse($respArr);
 

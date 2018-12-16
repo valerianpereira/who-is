@@ -21,6 +21,13 @@ define('JSONWHOIS_API_IP_URL','https://api.jsonwhois.io/whois/ip');
 define('JSONWHOIS_API_AVAIL_URL','https://api.jsonwhois.io/whois/availability');
 define('JSONWHOIS_API_METHOD','GET');
 define('JSONWHOIS_API_KEY','');
-define('JSONWHOIS_API_STATUS','ENABLED');
+define('JSONWHOIS_API_STATUS','DISABLED');
+
+// whoisxmlapi.com (500 Requests - domain/ip/availability)
+define('WHOISXML_API_URL','https://www.whoisxmlapi.com/whoisserver/WhoisService');
+define('WHOISXML_BALANCE_URL','https://www.whoisxmlapi.com/accountServices.php');
+define('WHOISXML_API_METHOD','GET');
+define('WHOISXML_API_KEY','');
+define('WHOISXML_API_STATUS','DISABLED');
 
 ?>

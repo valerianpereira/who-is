@@ -15,25 +15,26 @@ function validateRequest($variables = array(), $requiredFields = array()) {
       $tempArr = strpos($f,'|') ? explode('|', $f) : array();
       if(!empty($tempArr) && count($tempArr) > 1) :
         // Setting a exact value of key
-        $f = !empty($tempArr[0]) ? $tempArr[0] : end($tempArr);
+        $f = !empty($tempArr[0]) ? trim($tempArr[0]) : trim(end($tempArr));
         
         // Dynamic Validations
         $validationArr = (!empty($tempArr[1]) && strpos($tempArr[1],':')) ? explode(':',$tempArr[1]) : array();
         if(!empty($validationArr) && count($validationArr) > 1) :
-
           // Required If Validation
-          if($validationArr[0] == 'required_if') { 
+          if(trim($validationArr[0]) == 'required_if') { 
             $kv = (!empty($validationArr[1]) && strpos($validationArr[1],',')) ? explode(',',$validationArr[1]) : array();
             if(!empty($kv) && count($kv) > 1 && !empty($kv[0])) {
-              $k = $kv[0];
+              $k = trim($kv[0]);
               $v = (!empty($kv[1]) && strpos($kv[1],'/')) ? explode('/',$kv[1]) : $kv[1];
+              
               if(isset($variables[$k]) && !empty($variables[$k])) {
                 // Does it have multiple values ? divided by /
-                if (is_array($v))
-                  if(!in_array($variables[$k],$v)) 
-                    continue;
-                if($variables[$k] != $v) 
+                if(is_array($v) && !in_array($variables[$k],$v)) {
                   continue; // Skip validation
+                }
+                if(!is_array($v) && $variables[$k] != $v) {
+                    continue; // Skip validation
+                }
               }
             }
           } // Required If Validation
@@ -41,7 +42,6 @@ function validateRequest($variables = array(), $requiredFields = array()) {
         endif;
       endif;
       
-
       if(isset($variables[$f]) && !empty($variables[$f])) {
         if($f == 'Authorization') { // Validating Authorization Token
           $tempArr = explode(' ', $variables[$f]);
