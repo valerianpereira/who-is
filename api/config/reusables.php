@@ -172,22 +172,22 @@ function echoResponse($responseArr, $code = 200)
 }
 
 // Validating Response for Correctness of Data
-function validateResponse($r)
+function validateResponse($r, $from)
 {
     // WhoisXMLAPI
-    if (isset($r['WhoisRecord']['dataError']))
+    if ($from == 'WhoIsXml' && !empty($r['WhoisRecord']['dataError']))
         return false;
 
     // FreeDomanAPI -- PAID
-    if (isset($r['status']) && $r['status'] == 1)
+    if ($from == 'FreeDomainApi' && isset($r['status']) && $r['status'] == 1)
         return false;
 
     // JSONWHOIS
-    if (isset($r['result']['created']) && empty($r['result']['created']))
+    if ($from == 'JsonWhoIs' && empty($r['result']['created']))
         return false;
 
     // JSONWhoIsApi
-    if (isset($r['created']) && empty($r['created']))
+    if ($from == 'JsonWhoIsApi' && empty($r['created']))
         return false;
 
     return true;
@@ -200,7 +200,7 @@ function formatResponse($r, $from)
     $respArr = array();
 
     // Validating Response
-    if (!validateResponse($r)) :
+    if (!validateResponse($r, $from)) :
         $respArr['status'] = 'Error';
         $respArr['error']['message'] = 'Data not found.';
         return $respArr;
@@ -274,16 +274,4 @@ function populateData($r)
     $respArr["registrar"]["email"] = $r[9];
 
     return $respArr;
-}
-
-function makeArray($keys, $value)
-{
-    $var = array();
-    $index = array_shift($keys);
-    if (!isset($keys[0])) {
-        $var[$index] = $value;
-    } else {
-        $var[$index] = makeArray($keys, $value);
-    }
-    return $var;
 }
