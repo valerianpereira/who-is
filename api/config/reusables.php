@@ -170,3 +170,120 @@ function echoResponse($responseArr, $code = 200)
   // Die
     die();
 }
+
+// Validating Response for Correctness of Data
+function validateResponse($r)
+{
+    // WhoisXMLAPI
+    if (isset($r['WhoisRecord']['dataError']))
+        return false;
+
+    // FreeDomanAPI -- PAID
+    if (isset($r['status']) && $r['status'] == 1)
+        return false;
+
+    // JSONWHOIS
+    if (isset($r['result']['created']) && empty($r['result']['created']))
+        return false;
+
+    // JSONWhoIsApi
+    if (isset($r['created']) && empty($r['created']))
+        return false;
+
+    return true;
+}
+
+
+// Formatting all responses in one single format
+function formatResponse($r, $from)
+{
+    $respArr = array();
+
+    // Validating Response
+    if (!validateResponse($r)) :
+        $respArr['status'] = 'Error';
+        $respArr['error']['message'] = 'Data not found.';
+        return $respArr;
+    endif;
+
+    // WhoisXMLAPI
+    if ($from == 'WhoIsXml') :
+        return populateData(array(
+        $r['WhoisRecord']['domainName'],
+        $r['WhoisRecord']['registryData']['createdDate'],
+        $r['WhoisRecord']['registryData']['updatedDate'],
+        $r['WhoisRecord']['registryData']['expiresDate'],
+        1,
+        $r['WhoisRecord']['registryData']['nameServers']['hostNames'],
+        $r['WhoisRecord']['registryData']['registrant']['organization'],
+        $r['WhoisRecord']['registryData']['registrant']['state'],
+        $r['WhoisRecord']['registrarName'],
+        'abuse@registrar.com'
+    ));
+    endif;
+
+    // FreeDomanAPI -- PAID
+
+    // JSONWHOIS
+    if ($from == 'JsonWhoIs') :
+        return populateData(array(
+        $r["result"]["name"],
+        $r["result"]["created"],
+        $r["result"]["changed"],
+        $r["result"]["expires"],
+        $r["result"]["registered"],
+        $r["result"]["nameservers"],
+        $r["result"]["contacts"]["owner"][0]["organization"],
+        $r["result"]["contacts"]["owner"][0]["state"],
+        $r["result"]["registrar"]["name"],
+        $r["result"]["registrar"]["email"]
+    ));
+    endif;
+
+    // JSONWhoIsApi
+    if ($from == 'JsonWhoIsApi') :
+        return populateData(array(
+        $r["name"],
+        $r["created"],
+        $r["changed"],
+        $r["expires"],
+        $r["registered"],
+        $r["nameservers"],
+        $r["contacts"]["owner"],
+        $r["contacts"]["owner"],
+        $r["registrar"]["name"],
+        $r["registrar"]["email"]
+    ));
+    endif;
+}
+
+function populateData($r)
+{
+    $respArr = array();
+    $respArr['status'] = 'Success';
+
+    $respArr["name"] = $r[0];
+    $respArr["created"] = $r[1];
+    $respArr["changed"] = $r[2];
+    $respArr["expires"] = $r[3];
+    $respArr["registered"] = $r[4];
+    $respArr["nameservers"] = $r[5];
+    $respArr["contacts"]["owner"]["organization"] = $r[6];
+    $respArr["contacts"]["owner"]["state"] = $r[7];
+    $respArr["registrar"]["name"] = $r[8];
+    $respArr["registrar"]["email"] = $r[9];
+
+    return $respArr;
+}
+
+function makeArray($keys, $value)
+{
+    $var = array();
+    $index = array_shift($keys);
+    if (!isset($keys[0])) {
+        $var[$index] = $value;
+    } else {
+        $var[$index] = makeArray($keys, $value);
+    }
+    return $var;
+}
