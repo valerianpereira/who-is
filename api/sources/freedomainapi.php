@@ -1,23 +1,23 @@
 <?php 
 
-require_once(realpath(dirname(__FILE__).'/../config/constants.php'));
-require_once(realpath(dirname(__FILE__).'/../config/reusables.php'));
+require_once(realpath(dirname(__FILE__) . '/../config/constants.php'));
+require_once(realpath(dirname(__FILE__) . '/../config/reusables.php'));
 
 // freedomainapi.com (1 Request per minute)
 // Refer : https://freedomainapi.com/free-domain-availability-api.html
 // Refer : https://freedomainapi.com/free-whois-api.html
 $requiredFields = array(
-  'domain',
-  'r',
-  'Authorization'
+    'domain',
+    'r',
+    'Authorization'
 );
 
 validateRequest(array_merge(apache_request_headers(), $_POST), $requiredFields);
 
 $reqParams = array(
-  'domain' => trim($_POST['domain']),
-  'r' => trim($_POST['r']), //whois, taken
-  'apikey' => FREEDOMAIN_API_KEY
+    'domain' => trim($_POST['domain']),
+    'r' => trim($_POST['r']), //whois, taken
+    'apikey' => FREEDOMAIN_API_KEY
 );
 
 $respArr = array();
