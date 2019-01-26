@@ -3,11 +3,11 @@
 header('Content-Type: application/json;charset=utf-8');
 
 $output = array();
-$output['error']['message'] = 'Oops! The domain '. $_GET['domain'] .' is not registered';
+$output['error']['message'] = 'Oops! The domain ' . $_GET['domain'] . ' is not registered';
 
 if ($_GET['domain'] != '') {
-    
-    $sampleData = fnCurl('https://api.jsonwhois.io/whois/domain?key=KlJ6r4DAraYyQ5m7fTKHp9WjBrU6A7OP&domain='.$_GET['domain'], '', 'GET');
+
+    $sampleData = fnCurl('https://api.jsonwhois.io/whois/domain?key=KlJ6r4DAraYyQ5m7fTKHp9WjBrU6A7OP&domain=' . $_GET['domain'], '', 'GET');
     
     /*$sampleData = '{
   "result": {
@@ -56,10 +56,10 @@ if ($_GET['domain'] != '') {
     }
   }
 }';*/
-    
+
     $data = json_decode($sampleData, true);
 
-    if ( $data['result']['registered'] && !is_null($data['result']['registered']) ) {
+    if ($data['result']['registered'] && !is_null($data['result']['registered'])) {
         $output["name"] = $data["result"]["name"];
         $output["created"] = $data["result"]["created"];
         $output["changed"] = $data["result"]["changed"];
@@ -71,50 +71,50 @@ if ($_GET['domain'] != '') {
         $output["registrar"]["name"] = $data["result"]["registrar"]["name"];
         $output["registrar"]["email"] = $data["result"]["registrar"]["email"];
         $output['error']['message'] = '';
-    } 
-    
+    }
+
 }
 
 // Kal function
-function fnCurl($url, $params, $method = "POST", $optionalParams = array()) {
+function fnCurl($url, $params, $method = "POST", $optionalParams = array())
+{
 
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_HEADER, false);
+    $ch = curl_init();
 
-  if(!empty($optionalParams['authorization'])) {
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("authorization:". $optionalParams['authorization']));
-  }
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, false);
 
-  if(!empty($optionalParams['userPwd'])) {
-    curl_setopt($ch, CURLOPT_USERPWD, $optionalParams['userPwd']);
-  }
+    if (!empty($optionalParams['authorization'])) {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("authorization:" . $optionalParams['authorization']));
+    }
 
-  if(!empty($optionalParams['Content-Type'])) {
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type:". $optionalParams['Content-Type']));
-  }
+    if (!empty($optionalParams['userPwd'])) {
+        curl_setopt($ch, CURLOPT_USERPWD, $optionalParams['userPwd']);
+    }
 
-  if(strtoupper($method) == "GET") {
-    curl_setopt($ch, CURLOPT_HTTPGET, 1);
-  }
+    if (!empty($optionalParams['Content-Type'])) {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type:" . $optionalParams['Content-Type']));
+    }
 
-  elseif(strtoupper($method) == "POST") {
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-  }
+    if (strtoupper($method) == "GET") {
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+    } elseif (strtoupper($method) == "POST") {
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+    }
 
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-  $result = curl_exec($ch);
+    $result = curl_exec($ch);
 
-  curl_close($ch);
+    curl_close($ch);
 
-  if($result) {
-    return $result;
-  } else {
-    return "";
-  }
+    if ($result) {
+        return $result;
+    } else {
+        return "";
+    }
 }
 
 echo json_encode($output);
