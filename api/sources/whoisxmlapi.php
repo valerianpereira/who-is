@@ -1,8 +1,5 @@
 <?php 
 
-require_once(realpath(dirname(__FILE__) . '/../config/constants.php'));
-require_once(realpath(dirname(__FILE__) . '/../config/reusables.php'));
-
 // WHOISXMLAPI API
 // Refer : https://whoisapi.whoisxmlapi.com/docs
 $requiredFields = array(

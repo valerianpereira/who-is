@@ -1,10 +1,7 @@
-<?php 
-
-require_once(realpath(dirname(__FILE__) . '/../config/constants.php'));
-require_once(realpath(dirname(__FILE__) . '/../config/reusables.php'));
+<?php
 
 // JSONWHOIS API
-// Refer : https://jsonwhoisapi.com/docs#auth
+// Refer : https://jsonwhois.io
 $requiredFields = array(
     'domain | required_if:r,whois/availability',
     'r', // whois, ip, availability
