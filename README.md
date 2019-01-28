@@ -19,7 +19,7 @@ Get the information about the domain
 
 
 ## Updating API Documentation 
-Update api/index.php comments and then run following commands
+Update `api/index.php` comments and then run following commands
 ```
 npm install apidoc -g
 cd api/
