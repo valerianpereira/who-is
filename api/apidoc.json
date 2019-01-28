@@ -1,0 +1,11 @@
+{
+    "name": "whoisapi",
+    "version": "1.0.0",
+    "description": "Api to fetch whois information of domains.",
+    "title": "Whois Api Documentation",
+    "url": "http://127.0.0.1/who-is",
+    "template": {
+        "withCompare": false,
+        "withGenerator": false
+    }
+}
